@@ -1,0 +1,18 @@
+on break:
+	wait 1 tick
+	block at event-location is air
+	set {_item} to tool of player
+	set {_lore::*} to lore of {_item}
+	set {_multi} to 0
+	loop {_lore::*}:
+		if loop-value contains "Multiplier":
+			set {_a} to loop-value
+			replace "&7Multiplier &6&l| &7" with "" in {_a}
+			set {_multi} to {_a} parsed as number
+	{_multi} > 0
+	if "%event-block%" contains "ore":
+		stop
+	if chance of ({_multi}*3)%:
+		give 1 of event-block to player
+		send action bar "&bMultiplier enchant doubles your drop!" to player
+		play sound "BLOCK_NOTE_BLOCK_PLING" with volume 100 with pitch 1 to player at player 

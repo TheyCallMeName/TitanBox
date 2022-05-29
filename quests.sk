@@ -1,0 +1,173 @@
+on load:
+	set {questsamount} to 9
+	set {quests::1::name} to "&7Collect 20 Oak Log"
+	set {quests::1::item} to oak log
+	set {quests::1::ditem} to oak log
+	set {quests::1::amount} to 20
+	set {quests::1::rewardlisttext} to "&3- &6+500 Coins|&3- &b+50 EXP|&3- &ax1 Mine Crate Key"
+	set {quests::1::rewardlist} to "coineco give {player} 500|level giveexp 50 {player}|crates givekey {player} mine 1"
+	
+	set {quests::2::name} to "&7Collect 100 Cobblestone"
+	set {quests::2::item} to stone
+	set {quests::2::ditem} to stone
+	set {quests::2::amount} to 100
+	set {quests::2::rewardlisttext} to "&3- &6+750 Coins|&3- &b+200 EXP|&3- &ax1 Mine Crate Key"
+	set {quests::2::rewardlist} to "coineco give {player} 750|level giveexp 200 {player}|crates givekey {player} mine 1"
+
+	set {quests::3::name} to "&7Collect 500 Coal"
+	set {quests::3::item} to coal ore
+	set {quests::3::ditem} to coal block
+	set {quests::3::amount} to 500
+	set {quests::3::rewardlisttext} to "&3- &6+1000 Coins|&3- &b+500 EXP|&3- &ax1 Mine Crate Key"
+	set {quests::3::rewardlist} to "coineco give {player} 1000|level giveexp 500 {player}|crates givekey {player} mine 1"
+
+	set {quests::4::name} to "&7Collect 750 Iron"
+	set {quests::4::item} to iron ore
+	set {quests::4::ditem} to iron block
+	set {quests::4::amount} to 750
+	set {quests::4::rewardlisttext} to "&3- &6+1200 Coins|&3- &b+1000 EXP|&3- &ax1 Mine Crate Key"
+	set {quests::4::rewardlist} to "coineco give {player} 1200|level giveexp 1000 {player}|crates givekey {player} mine 1"
+
+	set {_num} to 5
+	set {quests::%{_num}%::name} to "&7Collect 900 Gold"
+	set {quests::%{_num}%::item} to gold ore
+	set {quests::%{_num}%::ditem} to gold block
+	set {quests::%{_num}%::amount} to 900
+	set {quests::%{_num}%::rewardlisttext} to "&3- &6+2000 Coins|&3- &b+2000 EXP|&3- &ax1 Mine Crate Key"
+	set {quests::%{_num}%::rewardlist} to "coineco give {player} 2000|level giveexp 2000 {player}|crates givekey {player} mine 1"
+
+	set {_num} to 6
+	set {quests::%{_num}%::name} to "&7Collect 1000 Diamond"
+	set {quests::%{_num}%::item} to diamond ore
+	set {quests::%{_num}%::ditem} to diamond block
+	set {quests::%{_num}%::amount} to 1000
+	set {quests::%{_num}%::rewardlisttext} to "&3- &6+3000 Coins|&3- &b+3000 EXP|&3- &ax2 Mine Crate Key"
+	set {quests::%{_num}%::rewardlist} to "coineco give {player} 3000|level giveexp 3000 {player}|crates givekey {player} mine 2"
+
+	set {_num} to 7
+	set {quests::%{_num}%::name} to "&7Collect 100 Ancient Debris"
+	set {quests::%{_num}%::item} to ancient debris
+	set {quests::%{_num}%::ditem} to netherite block
+	set {quests::%{_num}%::amount} to 100
+	set {quests::%{_num}%::rewardlisttext} to "&3- &6+3000 Coins|&3- &b+3000 EXP|&3- &ax2 Mine Crate Key"
+	set {quests::%{_num}%::rewardlist} to "coineco give {player} 3000|level giveexp 3000 {player}|crates givekey {player} mine 2"
+
+	set {_num} to 8
+	set {quests::%{_num}%::name} to "&7Collect 1000 Obsidian"
+	set {quests::%{_num}%::item} to obsidian
+	set {quests::%{_num}%::ditem} to crying obsidian
+	set {quests::%{_num}%::amount} to 1000
+	set {quests::%{_num}%::rewardlisttext} to "&3- &6+5000 Coins|&3- &b+5000 EXP|&3- &ax10 Mine Crate Key"
+	set {quests::%{_num}%::rewardlist} to "coineco give {player} 5000|level giveexp 5000 {player}|crates givekey {player} mine 10"
+
+	set {_num} to 9
+	set {quests::%{_num}%::name} to "&cDefeat the Land Boss"
+	set {quests::%{_num}%::item} to "landboss"
+	set {quests::%{_num}%::ditem} to enderdragon head
+	set {quests::%{_num}%::amount} to 1
+	set {quests::%{_num}%::rewardlisttext} to "&3- &6+10000 Coins|&3- &b+10000 EXP|&3- &ax10 Mine Crate Key"
+	set {quests::%{_num}%::rewardlist} to "coineco give {player} 10000|level giveexp 10000 {player}|crates givekey {player} mine 10"
+
+command /quests:
+	trigger:
+		create a gui with virtual chest inventory with 3 rows named "&3&lQuests":
+			set {_slot} to 0
+			
+			loop {questsamount} times:
+				#send "ee %loop-value% %loop-index%"
+				if {completequests::%player%::*} contains loop-value:
+					clear {_lore::*}
+					
+					set {_quest} to loop-value
+					make gui slot {_slot} with glowing barrier named "&c&lAlready completed!"
+					add 1 to {_slot}
+					
+				else if {startedquests::%player%} is not loop-value:
+					clear {_lore::*}
+					add "" to {_lore::*}
+					add "&eComplete the quest to get:" to {_lore::*}
+					set {_e::*} to {quests::%loop-value%::rewardlisttext} split at "|"
+					add {_e::*} to {_lore::*}
+					add "" to {_lore::*}
+					add "&9&lRIGHT CLICK &9to start quest!" to {_lore::*}
+			
+					set {_quest} to loop-value
+					make gui slot {_slot} with {quests::%loop-value%::ditem} named {quests::%loop-value%::name} with lore {_lore::*}:
+						if {startedquests::%player%} is set:
+							close player's inventory
+							send "&cYou can only start 1 quest at once!"
+							
+							stop
+						set {startedquests::%player%} to {_quest}
+						set {questprogress::%player%} to 0
+						send "&aYou have started the quest (%{quests::%{_quest}%::name}%) [id-%{_quest}%]"
+						make player execute command "/quests"
+					add 1 to {_slot}
+				else:
+					clear {_lore::*}
+					add "" to {_lore::*}
+					add "&eComplete the quest to get:" to {_lore::*}
+					set {_e::*} to {quests::%loop-value%::rewardlisttest} split at "|"
+					add {_e::*} to {_lore::*}
+					add "" to {_lore::*}
+					add "&6Progress: &e%{questprogress::%player%}%/%{quests::%loop-value%::amount}%" to {_lore::*}
+					add "" to {_lore::*}
+					add "&c&lRIGHT CLICK &cto cancel quest" to {_lore::*}
+					set {_quest} to loop-value
+					make gui slot {_slot} with glowing {quests::%loop-value%::ditem} named {quests::%loop-value%::name} with lore {_lore::*}:
+						if {startedquests::%player%} is not {_quest}:
+							close player's inventory
+							send "&cError-Not-the-quest. please report this to an admin." to player
+							stop
+						delete {startedquests::%player%}
+						set {questprogress::%player%} to 0
+						send "&cYou have canceled the quest. [id-%{_quest}%]"
+						make player execute command "/quests"
+					add 1 to {_slot}
+		open last gui to player
+on break:
+	set {_block} to type of event-block
+	wait 3 ticks
+	
+	block at event-location is air
+	
+	if {startedquests::%player%} is set:
+		set {_quest} to {startedquests::%player%}
+		{quests::%{_quest}%::item} is an item type
+		if "%{_block}%" is "%{quests::%{_quest}%::item}%":
+			add 1 to {questprogress::%player%}
+			if {questprogress::%player%} is ({quests::%{_quest}%::amount}/2):
+				send "&2You have reached half of progress needed to complete quest (%{quests::%{_quest}%::name}%&2). &6&lKEEP GOING!"
+			if {questprogress::%player%} >= {quests::%{_quest}%::amount}:
+				send title "&6&lQuest Completed" with subtitle "%{quests::%{_quest}%::name}%" to player
+				set {_cmd::*} to "%{quests::%{_quest}%::rewardlist}%" split at "|"
+				loop {_cmd::*}:
+					set {_a} to loop-value
+					replace all "{player}" with "%player%" in {_a}
+					make console execute command {_a}
+				set {questprogress::%player%} to 0
+				add {_quest} to {completequests::%player%::*}
+				delete {startedquests::%player%}
+	
+command /resetquests <player>:
+	permission: OP
+	trigger:
+		delete {questprogress::%arg-1%} 
+		delete {startedquests::%arg-1%}
+		delete {completequests::%arg-1%::*}
+command /onbossdefeat <player> <text>:
+	permission: OP
+	trigger:
+		if {startedquests::%arg-1%} is set:
+			set {_quest} to {startedquests::%player%}
+			if "%{quests::%{_quest}%::item}%" is "%arg-2%":
+				add 1 to {questprogress::%player%}
+				if {questprogress::%player%} >= {quests::%{_quest}%::amount}:
+					send title "&6&lQuest Completed" with subtitle "%{quests::%{_quest}%::name}%" to player
+					set {questprogress::%player%} to 0
+					add {_quest} to {completequests::%player%::*}
+					delete {startedquests::%player%}
+					set {_cmd::*} to "%{quests::%{_quest}%::rewards}%" split at "|"
+					loop {_cmd::*}:
+						make console execute command "%loop-value%"
+       

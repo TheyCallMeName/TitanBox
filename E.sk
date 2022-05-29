@@ -1,0 +1,7 @@
+command /removecurse <offlineplayer>:
+    permission: ee
+    trigger:
+        send "%{%arg-1%.reward}% e"
+        delete {%arg-1%.reward}
+        send "EEEEEeeEEE" to player
+	

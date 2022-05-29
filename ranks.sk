@@ -1,0 +1,70 @@
+
+command /giverank <text> <offlineplayer>:
+	permission: "ranks.giverank"
+	trigger:
+		make console execute command "lp user %arg-2% parent add %arg-1%"
+		if arg-1 is "diamond":
+		set {%arg-2%.reward} to arg-1
+    	if arg-1 is "bedrock":
+		set {%arg-2%.reward} to arg-1
+		if arg-2 is online:
+		doKeyall(arg-2, arg-1)
+		sendRankMessage(arg-2, arg-1)
+		delete {%arg-2%.reward}
+# command /freerank:
+#     permission: ranks.freerank
+#     trigger:
+#         make console execute command "lp user %player% permission set ranks.freerank false"
+#         make console execute command "lp user %player% parent add iron"
+#         set {_player} to player
+#         set {%player%.reward} to "iron"
+#         broadcast "&6&l%player% has claimed their free rank! &bClaim yours now with &c/freerank!"
+on join:
+	wait 3 seconds
+	if {%player%.reward} is set:
+		sendRankMessage(player, "%{%player%.reward}%")
+function hasKey(rank: text);
+	if {_rank} is "diamond":
+    	return true
+	if {_rank} is "bedrock":
+    	return true
+	else:
+    	return false
+function doKeyall(player: player, rank: text):
+    {%{_player}%.reward} is set
+	set {_am} to 0
+	if {_rank} is "diamond":
+		make console execute command "crates givekey * daily 1"
+		add 1 to {_am}
+	if {_rank} is "bedrock":
+		make console execute command "crates givekey * daily 2"
+		add 2 to {_am}
+		broadcast "&6&lYou got %{_am}% daily keys because %{_player}% bought %{_rank}%!"
+	loop all players:
+		play sound "UI_TOAST_CHALLENGE_COMPLETE" with volume 50 with pitch 1 at loop-player for loop-player
+	delete {%{_player}%.reward}
+command /claimkeyall:
+	trigger:
+		if {%player%.reward} is set:
+			set {_rank} to {%player%.reward}
+			doKeyall(player, {_rank})
+		else:
+			send "&cYou didn't buy a rank, or your keyall has already happened."
+
+command /setrankitem <string>:
+	permission: "ranks.setrankitem"
+	trigger:
+		add player's tool to {%arg-1%.rankitems::*}
+function sendRankMessage(player: player, rank: text):
+	send "&b-----------------------------------------------------" to {_player}
+	send "&6Thanks for purchasing %{_rank}% &6rank!" to {_player}
+	if {_rank} is "diamond":
+		send "&6Do &c/claimkeyall &6to do your keyall at anytime!" to {_player}
+	if {_rank} is "bedrock":
+		send "&6Do &c/claimkeyall &6to do your keyall at anytime!" to {_player}
+	send "&b-----------------------------------------------------" to {_player}
+	if hasKeyall({_rank}) is false:
+		delete {%{_player}%.reward}
+	loop all players:
+		send title "&6&lNew Donation" with subtitle "&b%{_player}% bought &6&l%{_rank}% &brank!" to loop-player for 5 seconds
+                

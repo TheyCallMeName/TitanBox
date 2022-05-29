@@ -1,0 +1,106 @@
+#   Version: 1.0
+#   Author: Twiistrz
+#   Server: PinoyZone
+#   IP: play.mcpinoyzone.com
+#   Improved Custom Death Message
+
+#Options
+options:
+    heart: ♥
+    ver: 1.0
+command /overallnick <text>:
+    permission: overallnick
+    trigger:
+        if arg-1 is "off":
+            delete {ovnicks.%player%.nick}
+        else:
+            set {ovnicks.%player%.nick} to arg-1
+        send "&aSet nick."
+command /toggledeathmsgs:
+    trigger:
+        if {deathmsgs::*} contains "%player%":
+            remove "%player%" from {deathmsgs::*}
+            send "&cDeath messages toggled off."
+        else:
+            add "%player%" to {deathmsgs::*}
+            send "&aDeath messages toggled on."         
+function doDeathMsg(msg: text):
+    loop {deathmsgs::*}:
+        send {_msg} to loop-value parsed as player
+on death of player:
+    set death message to ""
+    if attacker is a player:
+        if projectile is set:
+            if victim is player:
+                set {_vname} to "%victim%"
+                if {ovnicks.%victim%.nick} is set:
+                    set {_vname} to {ovnicks.%victim%.nick}
+                set {_aname} to "%attacker%"
+                if {ovnicks.%attacker%.nick} is set:
+                    set {_aname} to {ovnicks.%attacker%.nick}
+                set {_msg} to "&c%{_vname}% &8was shot by &c%{_aname}%&8 &8[&c%attacker's health%{@heart}&8]&8!"
+                doDeathMsg({_msg})
+
+    if attacker is not a player:
+        if attacker is set:
+            if victim is player:
+                set {_vname} to "%victim%"
+                if {ovnicks.%victim%.nick} is set:
+                    set {_vname} to {ovnicks.%victim%.nick}
+                set {_aname} to "%attacker%"
+                if {ovnicks.%attacker%.nick} is set:
+                    set {_aname} to {ovnicks.%attacker%.nick}
+                set {_msg} to "&c%{_vname}% &8was killed by a &c%{_aname}%&8 &8[&c%attacker's health%{@heart}&8]&8!"
+                doDeathMsg({_msg})
+
+    if attacker is a player:
+        if attacker is set:
+            if victim is player:
+                set {_vname} to "%victim%"
+                if {ovnicks.%victim%.nick} is set:
+                    set {_vname} to {ovnicks.%victim%.nick}
+                set {_aname} to "%attacker%"
+                if {ovnicks.%attacker%.nick} is set:
+                    set {_aname} to {ovnicks.%attacker%.nick}
+                set {_msg} to "&c%{_vname}% &8was beaten to death by &c%{_aname}%&8 &8[&c%attacker's health%{@heart}&8]&8!"
+                doDeathMsg({_msg})
+
+    if damage was caused by potion:
+        if victim is player:
+            set {_msg} to "&c%victim% &8was killed by &e&k--&8magic&e&k--&8."
+            doDeathMsg({_msg})
+
+    if damage was caused by fall:
+        if victim is player:
+            set {_msg} to "&c%victim% &8tried the leap of faith."
+            doDeathMsg({_msg})
+
+    if damage was caused by lava:
+        if victim is player:
+            set {_msg} to "&c%victim% &8thought swimming in lava was a good idea."
+            doDeathMsg({_msg})
+
+    if damage was caused by burning:
+        if victim is player:
+            set {_msg} to "&c%victim% &8just got Roasted."
+            doDeathMsg({_msg})
+
+    if damage was caused by drown:
+        if victim is player:
+            set {_msg} to "&c%victim% &8never learned how to swim."
+            doDeathMsg({_msg})
+
+    if damage was caused by starvation:
+        if victim is player:
+            set {_msg} to "&c%victim% &8was starved to death."
+            doDeathMsg({_msg})
+
+    if damage was caused by lightning:
+        if victim is player:
+            set {_msg} to "&c%victim% &8was struck by lightning."
+            doDeathMsg({_msg})
+
+    if damage was caused by block explosion:
+        if victim is player:
+            set {_msg} to "&c%victim% &8was blown to bits."
+            doDeathMsg({_msg})

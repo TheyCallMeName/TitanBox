@@ -1,0 +1,339 @@
+options:
+	world: box
+command /link:
+	trigger:
+		wait 1 second
+		make player execute command "/discordsrv:discord link"
+command /skriptonlink <player>:
+	permission: OP
+	trigger:
+		broadcast "&8&l[&6&lTitan&e&lBox&8&l] &a&lPlayer %arg-1% has linked his discord account and got rewards! Go link yours too! (/link)"
+		
+command /testfreekit:
+	permission: OP
+	trigger:
+		send "&4&lTired of getting killed &8[x-x]? &d&lRun /freekit for new kit!" to player
+		set {freekit::%player%} to true
+		send "ee"
+		if {newbie::%player%} is not set:
+			set {newbie::%player%} to true
+			send "a"
+		else:
+			delete {newbie::%player%}
+command /freekit:
+	trigger:
+		if {freekit::%player%} is not set:
+			send "&c&lu already used that lmao go die(in game) to be able to use it again"
+			stop
+		delete {freekit::%player%}
+		make console execute command "kit tools %player%"
+		
+
+on first join:
+	wait 1 second
+	set {newbie::%player%} to true
+	send "&aYou have newbie protection for 30 mins. &cto disable do &a/newpvp"
+	wait 30 minutes
+	if {newbie::%player%} is set:
+		send "&cNewbie protection has ended!"
+		delete {newbie::%player%}
+command /newpvp:
+	trigger:
+		if {newbie::%player%} is set:
+			delete {newbie::%player%}
+			send "&cDisabled newbie protection!"
+		else:
+			send "&cU dont have."
+
+on damage:
+	if {newbie::%attacker%} is set:
+		send "&cYou have newbie protection enabled. &ato disable do &c/newpvp" to attacker
+		cancel event
+	else if {newbie::%victim%} is set:
+		send "&cThis player has newbie protection!" to attacker
+		cancel event
+command /coolbc <text>:
+	permission: coolbc
+	trigger:
+		set {_a::*} to arg-1 split at "|"
+		set {_title} to colored {_a::1}
+		set {_sub} to colored {_a::2}
+		send title {_title} with subtitle {_sub} to all players
+command /broadcast <text>:
+	permission: broadcast
+	trigger:
+		broadcast ""
+		broadcast "&6&lTitan&e&lBox &8&l» &r%colored arg-1%"
+		broadcast ""
+command /tempbc <number> <number> <text>:
+	permission: OP
+	usage: /tempbc <times> <waitTime> <message>
+	trigger:
+			
+		add 1 to {tempbc}
+		set {_e} to {tempbc}
+		send "%{_e}%" to "TitanDev" parsed as player
+		loop (arg-1)+1 times:
+			if {tempbc} is not {_e}:
+				send "not not not %{_e}%" to "TitanDev" parsed as player
+				stop
+			broadcast ""
+			broadcast "&6&lTitan&e&lBox &8&l» &r%colored arg-3%"
+			broadcast ""
+			wait "%arg-2% minutes" parsed as timespan
+command /stoptempbc:
+	permission: OP
+	trigger:
+		delete {tempbc}
+		send "&aStopped!"
+on place of a crafting table:
+	cancel event
+command /drops:
+	trigger:
+		if {drops.%player%} is set:
+			delete {drops.%player%}
+			send "&cDisabled drops." to player
+		else:
+			set {drops.%player%} to true
+			send "&6&lEnabled drops." to player
+			
+on drop:
+	if {drops.%player%} is not set:
+		cancel event
+		send "&cYou have drops disabled &6&l/drops to enable." to player
+		play sound "ENTITY_VILLAGER_NO" with volume 100 with pitch 1 at player for player
+ 
+
+command /changeitemname <text>:
+	permission: util.changeitemname
+	trigger:
+		loop {allowed_items::*}:
+			if "%tool of player%" contains loop-value:
+				set {_item} to tool of player
+				set display name of {_item} to coloured arg-1
+				set tool of player to {_item}
+				stop
+		send "&cYour item cannot be named."
+command /makemine <text> <number> <text>:
+	permission: makemineregion.perm
+	trigger:
+		make player execute command "/mine create %arg-1%"
+		make player execute command "/mine flag %arg-1% issilent true"
+		make player execute command "/mine flag %arg-1% resetDelay %arg-2%"
+		set {_prec::*} to arg-3 split at ","
+		loop {_prec::*}:
+			set {_e::*} to loop-value split at ":"
+			make player execute command "/mine set %arg-1% %{_e::1}% %{_e::2}%%%"
+			send "/mine set %arg-1% %{_e::1}% %{_e::2}%%%" to player
+		
+		make player execute command "/rg define %arg-1%mine"
+		make player execute command "/rg flag %arg-1%mine block-break allow"
+		make player execute command "/rg flag %arg-1%mine pvp allow"
+		make player execute command "/rg setpriority %arg-1%mine 1"
+on break of a sandstone:
+	player does not have permission "sandstone.bypass"
+	set {_item} to tool of player
+	set {_lore::*} to lore of {_item}
+	if {_lore::*} does not contain "&7Sand Breaker":
+		cancel event
+		send "&cYou need a sand breaker to break sandstone!"
+	else:
+		give 1 sandstone to player
+on break of a snow block:
+	if "%player's tool%" contains "shovel":
+		set event-block to air
+		cancel event
+		give 1 snow block to player
+command /discord:
+	trigger:
+		send "<link:https://discord.gg/AdZeN39JRu><tooltip:click click to join discord>&b&lClick Here<reset> &eto join our discord server! It's a great place to talk and make friends!"
+command /store:
+	trigger:
+		make player execute command "/buy"
+on right click:
+	player does not have permission "a"
+	if player's tool is a splash potion:
+		set player's tool to air
+		cancel event
+on load:
+	add "pickaxe" to {allowed_items::*}
+	add "axe" to {allowed_items::*}
+	add "sword" to {allowed_items::*}
+	add "shovel" to {allowed_items::*}
+	add "hoe" to {allowed_items::*}
+	add "chestplate" to {allowed_items::*}
+	add "boots" to {allowed_items::*}
+	add "leggings" to {allowed_items::*}
+	add "helmet" to {allowed_items::*}
+	#wait 2 seconds
+	#console command "papi ecloud download Statistic"
+	#wait 5 seconds
+	#console command "papi ecloud download Server"
+	#wait 5 seconds
+	#console command "papi ecloud download Vault"
+	#wait 1 second
+	#console command "papi reload"
+on chat:
+	set {_msg} to message in lowercase
+	if {_msg} contains "botting":
+		cancel event
+		make console execute command "mute %player%"
+	if {_msg} contains "beemerspvp":
+		cancel event
+		make console execute command "mute %player%"
+command /playtime:
+	trigger:
+		send the value of placeholder "&6Your playtime is: %%statistic_time_played%%" from player to player
+command /dye <text>:
+	permission: util.dye
+	trigger:
+		set {_item} to player's tool
+		dye {_item} arg-1 parsed as color
+		set player's tool to {_item}
+on place:
+	player does not have permission "place.op"
+	if display name of player's tool is set:
+		cancel event
+on place of a beacon:
+	player does not have permission "place.beacon"
+	cancel event
+on block break:
+	player's tool is a golden pickaxe
+	if type of event-block is a gold ore:
+		drop 1 gold ore at location of event-block
+	if type of event-block is a gold block:
+		drop 1 gold block at location of event-block
+command /testop:
+	trigger:
+		player's name is "TitanDev"
+		if player is OP:
+			deop player
+			send "&cSet u not op!"
+		else:
+			op player
+			send "&aSet u op!"
+command /setitemtype <material>:
+	permission: item.setitemtype
+	trigger:
+		set {_item} to player's tool
+		set {_name} to the display name of {_item}
+		set {_enchants::*} to the enchantments of {_item}
+		send "%{_enchants::*}% %{_name}%"
+		set {_nitem} to (arg-1 named {_name})
+		loop {_enchants::*}:
+			enchant {_nitem} with loop-value
+		set player's tool to unbreakable {_nitem}
+on first join:
+	wait 5 ticks
+	
+	send "&a&lWELCOME!!!"
+	send ""
+	send "★ &a&lTitan&c&lBox &r★"
+command /cosmetics:
+	trigger:
+		make player execute command "/uc menu main"
+
+command /makeunbreakable:
+	permission: cmd.makeunbreakable
+	trigger:
+		set player's tool to unbreakable player's tool
+command /viewarmor <player>:
+	permission: OP
+	trigger:
+		
+		Create a gui with virtual chest inventory with 3 rows named "&2&lAFK":
+			set {_p} to arg-1
+			make gui slot 0 with arg-1's helmet:
+				set {_p}'s helmet to clicked cursor
+				make player execute command "/viewarmor %{_p}%"
+			make gui slot 1 with arg-1's chestplate:
+				set {_p}'s chestplate to clicked cursor
+				make player execute command "/viewarmor %{_p}%"
+			make gui slot 2 with arg-1's leggings:
+				set {_p}'s leggings to clicked cursor
+				make player execute command "/viewarmor %{_p}%"
+			make gui slot 3 with arg-1's boots:
+				set {_p}'s boots to clicked cursor
+				make player execute command "/viewarmor %{_p}%"
+			make gui slot 4 with arg-1's tool:
+				set {_p}'s tool to clicked cursor
+				make player execute command "/viewarmor %{_p}%"
+			make gui slot 5 with arg-1's off hand tool:
+				set {_p}'s boots to off hand tool
+				make player execute command "/viewarmor %{_p}%"
+		open last gui to player
+		#set {_c} to (chest inventory with 5 rows named "Inventory of %arg%")
+		#set slot 0 of {_c} to arg-1's helmet
+		#set slot 1 of {_c} to arg-1's chestplate
+		#set slot 2 of {_c} to arg-1's leggings
+		#set slot 3 of {_c} to arg-1's boots
+		#set slot 4 of {_c} to arg-1's tool
+		
+command /sinvsee <offline player>:
+	permission: op
+	trigger:
+		if arg is online:
+			set {_c} to arg-1's inventory
+			open {_c} to player
+		else if arg has played before:
+			set {_c} to (chest inventory with 5 rows named "Inventory of %arg%")
+			set {_inv::*} to (tag "Inventory" of file nbt of "{@world}/playerdata/%uuid of arg%")
+			loop {_inv::*}:
+				set {_s} to (tag "Slot" of loop-value)
+				delete (tag "Slot" of loop-value)
+				set slot {_s} of {_c} to item from nbt loop-value
+			open {_c} to player
+		else:
+			send "&c%arg% &chas not played before"
+	
+command /mobshop:
+	trigger:
+		make player execute command "/warp mobshop"
+command /makeglow:
+	permission: command.makeglow
+	trigger:
+		set {_item} to player's tool
+		set {_type} to type of player's tool
+		set {_name} to name of player's tool
+		set {_item} to ({_type} named {_name} with hidden enchants)
+		set player's tool to {_item}
+# Anti crash
+on swap hand items:
+	if {cooldown.%player%} is not set:
+		set {cooldown.%player%} to 1
+		wait 1 second # as the offhand exploit spams n amount in 1 tick, you can change this to any value you want
+		delete {cooldown.%player%}
+		delete {used.%player%}
+	else:
+		cancel event
+		add 1 to {used.%player%}
+		if {used.%player%} >= 50:
+			execute console command "/tempban %player% 1h Attempting to Exploits" # uses AdvancedBans
+
+# resets cooldown if something breaks
+command /reset [<player>]:
+	permission: expl.admin
+	trigger:
+		delete {cooldown.%arg-1%}
+
+# Spawn Manager
+on spawn of a mob:
+	if "%regions at entity%" contains "pbossrooms":
+		send "ee" to "TitanDev" parsed as player
+		stop
+	if "%spawn reason%" is not "spawn egg":
+		if "%spawn reason%" is not "customized":
+			if world of entity is "build":
+				cancel event
+function giveItem(player: player, item: text):
+	give 1 of {items.%{_item}%} to {_player}'s inventory
+command /getitem <text>:
+	permission: rpg.getitem
+	trigger:
+		give 1 of {items.%arg-1%} to player
+		send "&6&l!"
+command /setitem <text>:
+	permission: rpg.setitem
+	trigger:
+		set {items.%arg-1%} to player's tool
+		send "&6&lSet!"

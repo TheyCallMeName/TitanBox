@@ -1,0 +1,48 @@
+on death of a player:
+	if attacker is a player:
+		add 1 to  {%attacker%.kills}
+		add 1 to {%victim%.deaths}
+on placeholderapi placeholder request for the prefix "pvpstats":
+	if {%player%.deaths} is not set:
+		set {%player%.deaths} to 0
+	if {%player%.kills} is not set:
+		set {%player%.kills} to 0
+	if the identifier is "kills": # The placeholder would be 'custom_message'
+		if {%player%.kills} is set:
+			set {kills::%player%} to {%player%.kills}
+		set the result to "%{kills::%player%}%"
+		
+	if the identifier is "deaths": # The placeholder would be 'custom_message'
+		if {%player%.deaths} is set:
+			set {deaths::%player%} to {%player%.deaths}
+		set the result to "%{deaths::%player%}%"
+	if the identifier is "kdr": # The placeholder would be 'custom_message
+		if {deaths::%player%} is 0:
+			set the result to "%{kills::%player%}%"
+			stop
+		set {_kdr} to {kills::%player%} / {deaths::%player%}
+		set the result to "%{_kdr}%"
+#command /kdrtop:
+	#trigger:
+		#set {_list::*} to sort({kills::*}, "&7[@index]  - &avalue") 
+		#send "%{_list::*}%" to player
+function sort(list: objects, format: text) :: objects:
+	loop {_list::*}:
+		add 1 to {_size}
+		if {_low.to.high.list::%loop-value%} is not set:
+			set {_low.to.high.list::%loop-value%} to loop-index
+		else:
+			set {_n} to 0
+			loop {_size} times:
+				set {_n} to {_n}+1
+				{_low.to.high.list::%loop-value-1%.%{_n}%} is not set
+				set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
+				stop loop
+	
+	loop {_low.to.high.list::*}:
+		set {_e} to {_format}
+		replace all "@index" with "%loop-index%" in {_e}
+		replace all "@value" with "%loop-value%" in {_e}
+		add {_e} to {_r::*}
+		
+	return {_r::*}

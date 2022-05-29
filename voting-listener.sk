@@ -1,0 +1,33 @@
+options:
+    botToken: OTIxMTM5NDIzMTI1NTkwMDE2.Ybuj8A.oG24OmNxJyq0TiXQd_B3nqExVeY # Replace this with the token of your bot
+    channelID: "921130879861026856" # Replace this with the ID of your ad channel
+    reportChannel: "858746629082578944"
+on load:
+    login to "{@botToken}" with the name "votinglistener"
+on message receive seen by "votinglistener":
+	discord id of event-member != "921139423125590016"
+	if discord id of event-channel is {@channelID}:
+		send "gg" to "TitanDev" parsed as player
+		set {_parts::*} to content of event-message split at ":"
+		set {_player} to {_parts::2}
+		set {_website} to {_parts::3}
+		onVote({_player}, {_website}) 
+function onVote(player: text, website: text):
+	broadcast "&6&lPlayer %{_player}% has voted on %{_website}%."
+# REPORT
+
+command /report <player> <text>:
+	cooldown: 1 hour
+	cooldown message: &cYou can only report once every hour.
+	trigger:
+		if arg-1 is player:
+			send "&cYou can't report urself."
+			stop
+		make embed:
+			set title of embed to "New Report"
+			set colour of the embed to red
+			add field named "Reporter" with value "%player%" to fields of embed
+			add field named "Target" with value "%arg-1%" to fields of embed
+			add field named "Reason" with value arg-2 to fields of embed
+		send "@everyone" to text channel with id {@reportChannel}
+		send last embed to text channel with id {@reportChannel}

@@ -1,0 +1,150 @@
+command /chatfilter <text> <text>:
+	permission: cmd.chatfilter
+	trigger:
+		if arg-1 is "add":
+			add arg-2 to {badwords::*}
+		else if arg-1 is "remove":
+			remove arg-2 from {badwords::*}
+on load:
+	set {_a} to "nigger,niqqer,n1gger,n!gger,dick,bitch,pussy"
+	set {_wchatf::*} to {_a} split at ","
+	add {_wchatf::*} to {badwords::*}
+on chat:
+
+	player doesn't have permission "chatfilter.bypass"
+	set {_msg} to message in lowercase
+	set {_reg} to "[()?_'--""+=!$%%&\/|\\<> ]+|\w"
+	set {_a} to {_msg}
+	replace all " " with "" in {_a}
+	if {_a} doesn't match ".*%{_reg}%.*":
+		send "&cMessage Blocked due to people abusing unicode characters."
+		cancel event
+	replace "1" and "!" with "i" in {_a}
+	loop {badwords::*}:
+		if {_a} contains loop-value:
+			send ""
+			send "&4&lDont say bad words '%loop-value%&4&l' x_x ^-^ "
+			send ""
+			cancel event
+			stop
+# Chat games
+function cg_startGame(a: text, chat: text, time: number):
+	set {chatgames_currentgame.text} to {_chat}
+	wait "%{_time}% seconds" parsed as timespan
+	{chatgames_currentgame.text} is {_chat}
+	broadcast ""
+	broadcast "&c&lNo body got the %{_a}% &c&lin time. the %{_a}% &c&lwas &6&l%{_chat}%."
+	broadcast ""
+	delete {chatgames_currentgame.text}
+function cg_startTypeGame(chat: text):
+	broadcast ""
+	loop all players:
+		json("%loop-player%", "&6&lFirst person to type ||&b&lTHIS&7(hover) ||ttp:&aThe word is: &a&l'%{_chat}%'||&6&lword gets a reward!")
+	broadcast ""
+	cg_startGame("word", {_chat}, 10)
+function cg_startMathGame(a: number, b: number, op: text):
+	broadcast ""
+	broadcast "&6&lFirst person to say what's &a&l%{_a}% &a&l%{_op}%&a&l %{_b}% &6&lgets a reward!"
+	broadcast ""
+	if "%{_op}%" is "+":
+		set {_chat} to {_a} + {_b}
+	else if "%{_op}%" is "*":
+		set {_chat} to {_a} * {_b}
+	else if "%{_op}%" is "/":
+		set {_chat} to {_a} / {_b}
+	else if "%{_op}%" is "-":
+		set {_chat} to {_a} - {_b}
+	cg_startGame("answer", "%{_chat}%", 10)
+on chat:
+	{chatgames_currentgame.text} is set
+	set {_msg} to message
+	if {_msg} is {chatgames_currentgame.text}:
+		broadcast ""
+		broadcast "&c&l%player% &6&lgot the word first and was rewarded!"
+		broadcast ""
+		make console execute command "crates givekey %player% games 1"
+		send "&aYou won a games crate key, this crate keys are virtual, just click on crate and it will open!" to player
+		delete {chatgames_currentgame.text}
+		cancel event
+on load:
+	add "math" to {chatgames_games::*}
+	add "word" to {chatgames_games::*}
+	
+	clear {chatgames_op::*}
+	add "+-" to {chatgames_op::*}
+	add "*/" to {chatgames_op::*}
+every 5 minutes in "box":
+	set {_game} to random element out of {chatgames_games::*}
+	if {_game} is "word":
+		set {_word} to random element out of {chatgames_words::*}
+		cg_startTypeGame({_word})
+	else if {_game} is "math":
+		set {_a} to a random integer between 1 and 9
+		set {_b} to a random integer between 1 and 9
+		set {_op} to random element out of {chatgames_op::*}
+		
+		if {_op} is "+-":
+			if {_a} > {_b}:
+				set {_op} to "-"
+			else:
+				set {_op} to "+"
+		else if {_op} is "*/":
+			if {_a} is not divisible by {_b}:
+				set {_op} to "*"
+			else:
+				set {_op} to "/"
+		cg_startMathGame({_a}, {_b}, {_op})
+command /testtt:
+	permission: cmd.testtt
+	trigger:
+		set {_game} to random element out of {chatgames_games::*}
+		if {_game} is "word":
+			set {_word} to random element out of {chatgames_words::*}
+			cg_startTypeGame({_word})
+		else if {_game} is "math":
+			set {_a} to a random integer between 1 and 9
+			set {_b} to a random integer between 1 and 9
+			
+			set {_op} to random element out of {chatgames_op::*}
+			
+			if {_op} is "+-":
+				if {_a} > {_b}:
+					set {_op} to "-"
+				else:
+					set {_op} to "+"
+			else if {_op} is "*/":
+				if {_a} is not divisible by {_b}:
+					set {_op} to "*"
+				else:
+					set {_op} to "/"
+
+			cg_startMathGame({_a}, {_b}, {_op})
+function checkNumbers(a: number, b: number) :: boolean:
+	if {_a} is not divisible by {_b}:
+		set {_a} to a random integer between 1 and 9
+		set {_b} to a random integer between 1 and 9
+		if checkNumbers({_a}, {_b}) is true:
+			return true
+	else:
+		return true
+command /chatgamewords:
+	permission: chatgames.words
+	trigger:
+		loop {chatgames_words::*}:
+			json("%player%", "%loop-value%||sgt:/setchatgameword %loop-index% m||ttp:&bClick to edit!")
+		json("%player%", "&a&lNew [+]||ttp:&bAdd new word||sgt:/addchatgameword m")
+		
+command /setchatgameword <number> <text>:
+	permission: chatgames.edit
+	trigger:
+		set {chatgames_words::%arg-1%} to arg-2
+		send "&dSet!"
+		make player execute command "/chatgamewords"
+command /addchatgameword <text>:
+	permission: cmd.addchatgameword
+	trigger:
+		add arg-1 to {chatgames_words::*}
+		send "AADDEDEDEDDED"
+		make player execute command "/chatgamewords"
+	
+	

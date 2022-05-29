@@ -1,0 +1,68 @@
+#every 10 minutes in "world":
+		#broadcast "&8[&a&lTitan&c&lBox&8] &8» &6&lWant free rewards? Go ad now and get a &b&lAd Crate Key&6&l!"
+		#play sound "BLOCK_NOTE_BLOCK_PLING" with volume 100 with pitch 1 to all players
+every 6 minutes:
+	set {_msg} to random element out of {messages::*}
+	broadcast ""
+	loop {_msg} split at "|":
+		set {_a} to loop-value
+		replace all "&" with "§" in {_a}
+		replace all "{f}" with "          &8[&e&lTitan&6&lBox&8]" in {_a}
+		message centered {_a} to all players
+		play sound "BLOCK_NOTE_BLOCK_PLING" with volume 100 with pitch 1 to all players
+	broadcast ""
+command /addmsg <text>:
+	permission: command.addmsg
+	trigger:
+		add arg-1 to {messages::*}
+		send "&6Added"
+
+command /clearnotmsgs:
+	permission: command.clearnotmsgs
+	trigger:
+		delete {messages::*}
+	
+command /adnotify:
+	permission: command.adnotify
+	trigger:
+		broadcast "&8[&a&lTitan&c&lBox&8] &8» &6&lWant free rewards? Go ad now and get a &b&lAd Crate Key&6&l!"
+		play sound "BLOCK_NOTE_BLOCK_PLING" with volume 100 with pitch 1 to all players
+command /randombc:
+	permission: command.adnotify
+	trigger:
+		set {_msg} to random element out of {messages::*}
+		broadcast ""
+		loop {_msg} split at "|":
+			set {_a} to loop-value
+			replace all "&" with "§" in {_a}
+			replace all "{f}" with "          &8[&e&lTitan&6&lBox&8]" in {_a}
+			message centered {_a} to all players
+			play sound "BLOCK_NOTE_BLOCK_PLING" with volume 100 with pitch 1 to all players
+		broadcast ""
+command /admsgs:
+	permission: chatgames.words
+	trigger:
+		loop {messages::*}:
+			set {_msg} to loop-value
+			send "&8---------------" to player
+			loop {_msg} split at "|":
+				set {_a} to loop-value-2
+				replace all "&" with "§" in {_a}
+				json("%player%", "[]%{_a}%||sgt:/setadmsg %loop-index-1% %loop-value-1%||ttp:&bClick to edit!")
+		json("%player%", "&a&lNew [+]||ttp:&bAdd new msg||sgt:/addnotifmsg m")
+		
+command /setadmsg <number> <text>:
+	permission: chatgames.edit
+	trigger:
+		if arg-2 is "delete":
+			delete {messages::%arg-1%}
+			stop
+		set {messages::%arg-1%} to arg-2
+		send "&dSet!"
+		make player execute command "/admsgs"
+command /addnotifmsg <text>:
+	permission: cmd.addchatgameword
+	trigger:
+		add arg-1 to {messages::*}
+		send "AADDEDEDEDDED"
+		make player execute command "/admsgs"

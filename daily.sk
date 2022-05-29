@@ -1,0 +1,17 @@
+on load:
+	set {currentday} to 1
+every 1 hour:
+	add 1 to {time}
+	if {time} is 24:
+		send "e %{currentday}%" to "TitanDev" parsed as player
+		add 1 to {currentday}
+		set {time} to 0
+command /daily:
+	trigger:
+		if {%player%::lastclaimed} is {currentday}:
+			set {_rem} to 24 - {time}
+			send "&cYou already claimed your daily reward, daily reward will be available again in %{_rem}% hours." 
+			stop
+		set {%player%::lastclaimed} to {currentday}
+		make console execute command "/crates givekey %player% daily 1"
+		send "&a&lClaimed daily reward!"

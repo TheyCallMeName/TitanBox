@@ -1,0 +1,387 @@
+on load:
+	play sound "entity.chicken.egg" to all players
+	broadcast ""
+	broadcast "<##da4299>&l[<##ff4eb3>RELOAD<##da4299>&l]"
+	broadcast "<##ff4eb3>chatcolor.sk &7has been reloaded and it took <##ff1dd4>%difference between {timer} and now%"
+	broadcast ""
+	delete {timer}
+
+on unload:
+	set {timer} to now
+
+command /color:
+	aliases: colc, col, chatcolor, colour, chatcolour
+	trigger:
+		create a gui with virtual chest inventory with 6 rows named "&8Chat colors":
+
+			make gui integers between 0 and 100 with gray stained glass pane named " "
+			set {_p} to player
+			set {_u} to uuid of {_p}
+			
+			# red
+			
+			if {color::%player's uuid%} doesn't contain "<##D2042D>":
+				make gui 0 with red dye named "&aCherry" with lore " " and " &2Color: &a##D2042D" and " &2Example: &a<##D2042D>This is a color" and " ":
+					if {_p} has permission "color.red":
+						set {color::%player's uuid%} to "<##D2042D>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 0 with shiny red dye named "&aCherry" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##800000>":
+				make gui 1 with red dye named "&aMaroon" with lore " " and " &2Color: &a##800000" and " &2Example: &a<##800000>This is a color" and " ":
+					if {_p} has permission "color.red":
+						set {color::%player's uuid%} to "<##800000>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 1 with shiny red dye named "&aMaroon" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FF3131>":
+				make gui 2 with red dye named "&aNeon" with lore " " and " &2Color: &a##FF3131" and " &2Example: &a<##FF3131>This is a color" and " ":
+					if {_p} has permission "color.red":
+						set {color::%player's uuid%} to "<##FF3131>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 2 with shiny red dye named "&aNeon" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##E34234>":
+				make gui 3 with red dye named "&aVermillion" with lore " " and " &2Color: &a##E34234" and " &2Example: &a<##E34234>This is a color" and " ":
+					if {_p} has permission "color.red":
+						set {color::%player's uuid%} to "<##E34234>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 3 with shiny red dye named "&aVermillion" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##C41E3A>":
+				make gui 4 with red dye named "&aCardinal" with lore " " and " &2Color: &a##C41E3A" and " &2Example: &a<##C41E3A>This is a color" and " ":
+					if {_p} has permission "color.red":
+						set {color::%player's uuid%} to "<##C41E3A>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 4 with shiny red dye named "&aCardinal" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FF2400>":
+				make gui 5 with red dye named "&aScarlet" with lore " " and " &2Color: &a##FF2400" and " &2Example: &a<##FF2400>This is a color" and " ":
+					if {_p} has permission "color.red":
+						set {color::%player's uuid%} to "<##FF2400>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 5 with shiny red dye named "&aScarlet" with lore " &2You have this selected!"
+
+			# blue
+			
+			if {color::%player's uuid%} doesn't contain "<##00FFFF>":
+				make gui 9 with light blue dye named "&aAqua" with lore " " and " &2Color: &a##00FFFF" and " &2Example: &a<##00FFFF>This is a color" and " ":
+					if {_p} has permission "color.blue":
+						set {color::%player's uuid%} to "<##00FFFF>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 9 with shiny light blue dye named "&aAqua" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##89CFF0>":
+				make gui 10 with light blue dye named "&aBaby" with lore " " and " &2Color: &a##89CFF0" and " &2Example: &a<##89CFF0>This is a color" and " ":
+					if {_p} has permission "color.blue":
+						set {color::%player's uuid%} to "<##89CFF0>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 10 with shiny light blue dye named "&aBaby" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##0000FF>":
+				make gui 11 with light blue dye named "&aDark" with lore " " and " &2Color: &a##0000FF" and " &2Example: &a<##0000FF>This is a color" and " ":
+					if {_p} has permission "color.blue":
+						set {color::%player's uuid%} to "<##0000FF>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 11 with shiny light blue dye named "&aDark" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##0096FF>":
+				make gui 12 with light blue dye named "&aLight" with lore " " and " &2Color: &a##0096FF" and " &2Example: &a<##0096FF>This is a color" and " ":
+					if {_p} has permission "color.blue":
+						set {color::%player's uuid%} to "<##0096FF>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 12 with shiny light blue dye named "&aLight" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##6495ED>":
+				make gui 13 with light blue dye named "&aCornflower" with lore " " and " &2Color: &a##6495ED" and " &2Example: &a<##6495ED>This is a color" and " ":
+					if {_p} has permission "color.blue":
+						set {color::%player's uuid%} to "<##6495ED>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 13 with shiny light blue dye named "&aCornflower" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##0047AB>":
+				make gui 14 with light blue dye named "&aCobalt" with lore " " and " &2Color: &a##0047AB" and " &2Example: &a<##0047AB>This is a color" and " ":
+					if {_p} has permission "color.blue":
+						set {color::%player's uuid%} to "<##0047AB>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 14 with shiny light blue dye named "&aCobalt" with lore " &2You have this selected!"
+
+			# green
+			
+			if {color::%player's uuid%} doesn't contain "<##9FE2BF>":
+				make gui 18 with lime dye named "&aSeafoam" with lore " " and " &2Color: &a##9FE2BF" and " &2Example: &a<##9FE2BF>This is a color" and " ":
+					if {_p} has permission "color.green":
+						set {color::%player's uuid%} to "<##9FE2BF>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 18 with shiny lime dye named "&aSeafoam" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##00A36C>":
+				make gui 19 with lime dye named "&aJade" with lore " " and " &2Color: &a##00A36C" and " &2Example: &a<##00A36C>This is a color" and " ":
+					if {_p} has permission "color.green":
+						set {color::%player's uuid%} to "<##00A36C>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 19 with shiny blue dye named "&aJade" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##50C878>":
+				make gui 20 with lime dye named "&aEmerald" with lore " " and " &2Color: &a##50C878" and " &2Example: &a<##50C878>This is a color" and " ":
+					if {_p} has permission "color.green":
+						set {color::%player's uuid%} to "<##50C878>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 20 with shiny lime dye named "&aEmerald" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##228B22>":
+				make gui 21 with lime dye named "&aForest" with lore " " and " &2Color: &a##228B22" and " &2Example: &a<##228B22>This is a color" and " ":
+					if {_p} has permission "color.green":
+						set {color::%player's uuid%} to "<##228B22>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 21 with shiny lime dye named "&aForest" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##0BDA51>":
+				make gui 22 with lime dye named "&aMalachite" with lore " " and " &2Color: &a##0BDA51" and " &2Example: &a<##0BDA51>This is a color" and " ":
+					if {_p} has permission "color.green":
+						set {color::%player's uuid%} to "<##0BDA51>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 22 with shiny lime dye named "&aMalachite" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##4CBB17>":
+				make gui 23 with lime dye named "&aKelly" with lore " " and " &2Color: &a##4CBB17" and " &2Example: &a<##4CBB17>This is a color" and " ":
+					if {_p} has permission "color.green":
+						set {color::%player's uuid%} to "<##4CBB17>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 23 with shiny lime dye named "&aKelly" with lore " &2You have this selected!"
+					
+			# orange
+				
+			if {color::%player's uuid%} doesn't contain "<##FFBF00>":
+				make gui 27 with orange dye named "&aAmber" with lore " " and " &2Color: &a##FFBF00" and " &2Example: &a<##FFBF00>This is a color" and " ":
+					if {_p} has permission "color.orange":
+						set {color::%player's uuid%} to "<##FFBF00>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 27 with shiny orange dye named "&aAmber" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FFAC1C>":
+				make gui 28 with orange dye named "&aBright" with lore " " and " &2Color: &a##FFAC1C" and " &2Example: &a<##FFAC1C>This is a color" and " ":
+					if {_p} has permission "color.orange":
+						set {color::%player's uuid%} to "<##FFAC1C>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 28 with shiny orange dye named "&aBright" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##CD7F32>":
+				make gui 29 with orange dye named "&aBronze" with lore " " and " &2Color: &a##CD7F32" and " &2Example: &a<##CD7F32>This is a color" and " ":
+					if {_p} has permission "color.orange":
+						set {color::%player's uuid%} to "<##CD7F32>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 29 with shiny orange dye named "&aBronze" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FFC000>":
+				make gui 30 with orange dye named "&aGolden" with lore " " and " &2Color: &a##FFC000" and " &2Example: &a<##FFC000>This is a color" and " ":
+					if {_p} has permission "color.orange":
+						set {color::%player's uuid%} to "<##FFC000>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 30 with shiny orange dye named "&aGolden" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FFA500>":
+				make gui 31 with orange dye named "&aNormal" with lore " " and " &2Color: &a##FFA500" and " &2Example: &a<##FFA500>This is a color" and " ":
+					if {_p} has permission "color.orange":
+						set {color::%player's uuid%} to "<##FFA500>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 31 with shiny orange dye named "&aNormal" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##F08000>":
+				make gui 32 with orange dye named "&aTangerine" with lore " " and " &2Color: &a##F08000" and " &2Example: &a<##F08000>This is a color" and " ":
+					if {_p} has permission "color.orange":
+						set {color::%player's uuid%} to "<##F08000>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 32 with shiny orange dye named "&aTangerine" with lore " &2You have this selected!"
+
+			# purple
+			
+			if {color::%player's uuid%} doesn't contain "<##AA336A>":
+				make gui 36 with purple dye named "&aDark" with lore " " and " &2Color: &a##AA336A" and " &2Example: &a<##AA336A>This is a color" and " ":
+					if {_p} has permission "color.purple":
+						set {color::%player's uuid%} to "<##AA336A>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 36 with shiny purple dye named "&aDark" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FF69B4>":
+				make gui 37 with purple dye named "&aHot Pink" with lore " " and " &2Color: &a##FF69B4" and " &2Example: &a<##FF69B4>This is a color" and " ":
+					if {_p} has permission "color.purple":
+						set {color::%player's uuid%} to "<##FF69B4>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 37 with shiny purple dye named "&aHot Pink" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##FF00FF>":
+				make gui 38 with purple dye named "&aMagenta" with lore " " and " &2Color: &a##FF00FF" and " &2Example: &a<##FF00FF>This is a color" and " ":
+					if {_p} has permission "color.purple":
+						set {color::%player's uuid%} to "<##FF00FF>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 38 with shiny purple dye named "&aMagenta" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##DA70D6>":
+				make gui 39 with purple dye named "&aOrchid" with lore " " and " &2Color: &a##DA70D6" and " &2Example: &a<##DA70D6>This is a color" and " ":
+					if {_p} has permission "color.purple":
+						set {color::%player's uuid%} to "<##DA70D6>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 39 with shiny purple dye named "&aOOrchid" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##800080>":
+				make gui 40 with purple dye named "&aPurple" with lore " " and " &2Color: &a##800080" and " &2Example: &a<##800080>This is a color" and " ":
+					if {_p} has permission "color.purple":
+						set {color::%player's uuid%} to "<##800080>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 40 with shiny purple dye named "&aPurple" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##E37383>":
+				make gui 41 with purple dye named "&aWatermellon" with lore " " and " &2Color: &a##E37383" and " &2Example: &a<##E37383>This is a color" and " ":
+					if {_p} has permission "color.purple":
+						set {color::%player's uuid%} to "<##E37383>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 41 with shiny purple dye named "&aWatermelon" with lore " &2You have this selected!"
+
+			# gray
+			
+
+			if {color::%player's uuid%} doesn't contain "<##B2BEB5>":
+				make gui 45 with gray dye named "&aAsh" with lore " " and " &2Color: &a##B2BEB5" and " &2Example: &a<##B2BEB5>This is a color" and " ":
+					if {_p} has permission "color.gray":
+						set {color::%player's uuid%} to "<##B2BEB5>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 45 with shiny gray dye named "&aAsh" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##A9A9A9>":
+				make gui 46 with gray dye named "&aDark" with lore " " and " &2Color: &a##A9A9A9" and " &2Example: &a<##A9A9A9>This is a color" and " ":
+					if {_p} has permission "color.gray":
+						set {color::%player's uuid%} to "<##A9A9A9>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 46 with shiny gray dye named "&aDark" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##899499>":
+				make gui 47 with gray dye named "&aPewter" with lore " " and " &2Color: &a##899499" and " &2Example: &a<##899499>This is a color" and " ":
+					if {_p} has permission "color.gray":
+						set {color::%player's uuid%} to "<##899499>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 47 with shiny gray dye named "&aPewter" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##71797E>":
+				make gui 48 with gray dye named "&aSteel" with lore " " and " &2Color: &a##71797E" and " &2Example: &a<##71797E>This is a color" and " ":
+					if {_p} has permission "color.gray":
+						set {color::%player's uuid%} to "<##71797E>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 48 with shiny gray dye named "&aSteel" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##C0C0C0>":
+				make gui 49 with gray dye named "&aSilver" with lore " " and " &2Color: &a##C0C0C0" and " &2Example: &a<##C0C0C0>This is a color" and " ":
+					if {_p} has permission "color.gray":
+						set {color::%player's uuid%} to "<##C0C0C0>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 49 with shiny gray dye named "&aSilver" with lore " &2You have this selected!"
+			if {color::%player's uuid%} doesn't contain "<##708090>":
+				make gui 50 with gray dye named "&aSlate" with lore " " and " &2Color: &a##708090" and " &2Example: &a<##708090>This is a color" and " ":
+					if {_p} has permission "color.gray":
+						set {color::%player's uuid%} to "<##708090>"
+						make player execute command "/color"
+						send action bar "&2Chat color set!" to {_p}
+			else:
+				make gui 50 with shiny gray dye named "&aSlate" with lore " &2You have this selected!"
+
+
+
+
+
+
+
+
+
+
+
+			# astetic
+			
+			if {color::%player's uuid%} doesn't contain "&l":
+				make gui 16 with book and quill named "&aBold" with lore " " and " &2Color: l" and " &2Example: &a%{color::%player's uuid%}%&lThis is a color" and " ":
+					if {_p} has permission "color.bold":
+						set {color::%player's uuid%} to "%{color::%player's uuid%}%&l"
+						make player execute command "/color"
+			if {color::%player's uuid%} contains "&l":
+				make gui 16 with shiny book and quill named "&aBold" with lore " " and " &2Color: N/A" and " &2Example: &aN/A" and " ":
+					if {_p} has permission "color.bold":
+						replace all "&l" in {color::%player's uuid%} with ""
+						send action bar "&2You removed bold from you're chat color!" to player
+						make player execute command "/color"
+						
+			if {color::%player's uuid%} doesn't contain "&o":
+				make gui 25 with book and quill named "&aItalic" with lore " " and " &2Color: o" and " &2Example: &a%{color::%player's uuid%}%&oThis is a color" and " ":
+					if {_p} has permission "color.bold":
+						set {color::%player's uuid%} to "%{color::%player's uuid%}%&o"
+						make player execute command "/color"
+			if {color::%player's uuid%} contains "&o":
+				make gui 25 with shiny book and quill named "&aItalic" with lore " " and " &2Color: N/A" and " &2Example: &aN/A" and " ":
+					if {_p} has permission "color.bold":
+						replace all "&o" in {color::%player's uuid%} with ""
+						send action bar "&2You removed bold from you're chat color!" to player
+						make player execute command "/color"
+						
+			if {color::%player's uuid%} doesn't contain "&n":
+				make gui 34 with book and quill named "&aUnderline" with lore " " and " &2Color: n" and " &2Example: &a%{color::%player's uuid%}%&nThis is a color" and " ":
+					if {_p} has permission "color.bold":
+						set {color::%player's uuid%} to "%{color::%player's uuid%}%&n"
+						make player execute command "/color"
+			if {color::%player's uuid%} contains "&n":
+				make gui 34 with shiny book and quill named "&aUnderline" with lore " " and " &2Color: N/A" and " &2Example: &aN/A" and " ":
+					if {_p} has permission "color.bold":
+						replace all "&n" in {color::%player's uuid%} with ""
+						send action bar "&2You removed bold from you're chat color!" to player
+						make player execute command "/color"
+
+
+			make gui 43 with barrier named "&2Reset Color":
+				set {color::%{_u}%} to "&7"
+				make player execute command "/color"
+			
+			
+			
+		open last gui to {_p}
+
+
+
+

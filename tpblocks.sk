@@ -1,0 +1,42 @@
+on toggle sneak:
+	
+	player is sneaking
+	wait 5 ticks
+	player is sneaking
+	if block below player is oak leaves:
+		set {_loc} to location of block at location of player
+		send "%{_loc}%"
+		if {tpblocksmap::%{_loc}%} is set:
+			send "bb"
+			set {_block} to {tpblocksmap::%{_loc}%}
+			if {tpblocks::%{_block}%::first} is {_loc}:
+				teleport player to {tpblocks::%{_block}%::second}
+			if {tpblocks::%{_block}%::second} is {_loc}:
+				teleport player to {tpblocks::%{_block}%::first}
+				
+command /deltpblock <text>:
+	permission: OP
+	trigger:
+		set {_first} to {tpblocks::%arg-1%::first}
+		set {_sec} to {tpblocks::%arg-1%::second}
+		delete {tpblocksmap::%{_first}%}
+		delete {tpblocksmap::%{_sec}%}
+		delete {tpblocks::%arg-1%::first}
+		delete {tpblocks::%arg-1%::second}
+		send "Done!!!"
+command /settpblcokfirst <text>:
+	permission: OP
+	trigger:
+		set {_loc} to location of block at location of player
+		send "%{_loc}%"
+		set {tpblocks::%arg-1%::first} to {_loc}
+		set {tpblocksmap::%{_loc}%} to arg-1
+		send "set"
+command /settpblcoksecond <text>:
+	permission: OP
+	trigger:
+		send "%{_loc}%"
+		set {_loc} to location of block at location of player
+		set {tpblocks::%arg-1%::second} to {_loc}
+		set {tpblocksmap::%{_loc}%} to arg-1
+		send "set"	

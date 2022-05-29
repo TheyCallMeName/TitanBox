@@ -1,0 +1,224 @@
+options:
+	prefix: &8[&6&lTitan&e&lAfk&8]
+	coinsprefix: &8[&6&lTitan&e&lCoins&8]
+on load:
+	clear {afkitems::*}
+	addAfkItem("Oak log", oak log, 10, 10)
+	addAfkItem("Stone", stone block, 20, 10)
+	addAfkItem("Iron", iron ingot, 30, 10)
+	addAfkItem("Coal", coal, 20, 20)
+	addAfkItem("Copper", copper ingot, 50, 10)
+	addAfkItem("Gold", gold ingot, 100, 10)
+	addAfkItem("Diamond", diamond, 200, 10)
+	addAfkItem("Debris", ancient debris, 400, 10)
+	addAfkItem("Obsidian", obsidian, 800, 1)
+	addAfkItem("Blackstone", blackstone, 1000, 1)
+	addAfkItem("Magma", Magma Block, 2000, 1)
+function addAfkItem(name: text, block: item, coins: number, permin: number):
+	add {_name} to {afkitems::*}
+	set {afkitem::%{_name}%::block} to {_block}
+	set {afkitem::%{_name}%::coins} to {_coins}
+	set {afkitem::%{_name}%::permin} to {_permin}
+on region enter:
+	if "%region%" contains "afk":
+		send "{@prefix} &bEntered AFK mine."
+		send "{@prefix} &fDo &b/afkgui &ffor options!"
+command /afkgui:
+	trigger:
+		Create a gui with virtual chest inventory with 3 rows named "&2&lAFK":
+			set {_slot} to 0
+			loop {afkitems::*}:
+				set {_name} to loop-value
+				clear {_lores::*}
+				set {_item} to "%{afkitem::%loop-value%::block}%" 
+				add "&7Gives &e%{afkitem::%loop-value%::permin}% &7per &eafk minute" to {_lores::*}
+				add "" to {_lores::*}
+				add "&bPrice per hour: &e%{afkitem::%loop-value%::coins}% &eCoins" to {_lores::*}
+				add "" to {_lores::*}
+				if {afkplayers::%player's uuid%::items::%{_name}%} is not set:
+					set {afkplayers::%player's uuid%::items::%{_name}%} to 0
+				add "&7Your hours: %{afkplayers::%player's uuid%::items::%{_name}%}% hours" to {_lores::*}
+				add "" to {_lores::*}
+				
+				add "&8[&9&lLEFT CLICK&8] &9to add an hour." to {_lores::*}
+				if {afkplayers::%player's uuid%::items::%{_name}%} > 0:
+					add "&8[&c&lMIDDLE CLICK&8] &cto remove an hour." to {_lores::*}
+					add "&8[&e&lRIGHT CLICK&8] &eto select/diselect this afk item." to {_lores::*}
+				
+				
+					add "" to {_lores::*}
+					if {afksel::%player's uuid%} is loop-value:
+						add "&6You have this selected!" to {_lores::*}
+					if {afkplayers::%player's uuid%::status} is set:
+						add "&6Status: &e%{afkplayers::%player's uuid%::status}%" to {_lores::*}
+					
+				
+				make gui slot {_slot} with glowing ("%{afkitem::%loop-value%::block}%" parsed as item) named "&e&l%loop-value%" with lore {_lores::*}:
+					if "%click type%" is "left mouse button":
+						if {coins::%player's uuid%} >= {afkitem::%{_name}%::coins}:
+							set {coins::%player's uuid%} to {coins::%player's uuid%} - {afkitem::%{_name}%::coins}
+							add 1 to {afkplayers::%player's uuid%::items::%{_name}%}
+							
+							send "{@prefix} &aBought 1 hour of %{_item}% for &e%{afkitem::%{_name}%::coins}% coins."
+							send "{@prefix} &c&lDo &b&l/startafk &c&lto start afking!"
+							make player execute command "/afkgui"
+						else:
+							send "{@prefix} &cYou dont have enough coins."
+							close player's inventory
+					else if "%click type%" is "right mouse button":
+						if {afkplayers::%player's uuid%::locked} is true:
+							send "{@prefix} &cWait for previous selection to end before selecting another one." 
+							send "&7Note: how is work is when you select a afk item, you have less than 1 minute to change again since it gives wanted block every minute, so when you select an afk item it removes an hour after 1 minute."
+							send "&7But dont worry if you want to change selection, you can change selection after 1 hour has passed (you have 5 minutes to select another one each hour)"
+							stop
+						if {afksel::%player's uuid%} is {_name}:
+							delete {afksel::%player's uuid%}
+							send "{@prefix} &7Unselected this afk item."
+							make player execute command "/afkgui"
+							stop
+						set {afksel::%player's uuid%} to {_name}
+						send "{@prefix} &7Selected this item to afk."
+						set {afkplayers::%player's uuid%::status} to "Awaiting"
+						make player execute command "/afkgui"
+						wait 1 minute
+						set {afkplayers::%player's uuid%::times} to 60
+						set {afkplayers::%player's uuid%::status} to "Awaiting, locked, 60 minutes remaining"
+						set {afkplayers::%player's uuid%::locked} to true
+						
+					else if "%click type%" is "middle mouse button":
+						if {afkplayers::%player's uuid%::items::%{_name}%} > 0:
+							remove 1 from {afkplayers::%player's uuid%::items::%{_name}%}
+							set {coins::%player's uuid%} to {coins::%player's uuid%} + {afkitem::%{_name}%::coins}
+							send "{@prefix} &cRefunded an hour."
+							make player execute command "/afkgui"
+				add 1 to {_slot}
+		open last gui to player
+command /startafk:
+	trigger:
+		if {afksel::%player's uuid%} is not set:
+			send "{@prefix} &cYou need to select a afk item first!"
+			stop
+		if {afking::*} contains "%player%":
+			remove "%player%" from {afking::*}
+			send "{@prefix} &cStopped your afk."
+			stop
+		send "{@prefix} &7Started Afking."
+		set {afkplayers::%player's uuid%::status} to "Awaiting, locked, %{afkplayers::%player's uuid%::times}% minutes remaining"
+		set {afkplayers::%player's uuid%::locked} to true
+		add "%player%" to {afking::*}
+		remove 1 from {afkplayers::%player's uuid%::items::%{_name}%}
+command /resetafk:
+	permission: AFK
+	trigger:
+		loop {afking::*}:
+			set {_p} to loop-value parsed as player
+			set {_u} to {_p}'s uuid
+			set {_sel} to {afksel::%{_u}%}
+			delete {afkplayers::%{_u}%::awaiting}
+			delete {afkplayers::%{_u}%::times}
+			delete {afkplayers::%{_u}%::items::%{_sel}%}
+			delete {afkplayers::%{_u}%::status}
+			delete {afkplayers::%{_u}%::locked}
+			delete {afksel::%{_u}%}
+			send "eebbb"
+		clear {afking::*}
+			
+every 1 minute in "build":
+	loop {afking::*}:
+	
+		set {_p} to loop-value parsed as player
+		if {_p} is offline:
+			remove loop-value from {afking::*}
+		if {_p} is not set:
+			remove loop-value from {afking::*}
+		{_p} is set
+		{_p} is not offline
+		
+		set {_u} to {_p}'s uuid
+		set {_sel} to {afksel::%{_u}%}
+		if "%regions at {_p}%" does not contain "afk":
+			
+			remove loop-value from {afking::*}
+		else:
+			if {afkplayers::%{_u}%::times} <= 0:
+				if {afkplayers::%{_u}%::awaiting} is not set:
+					set {afkplayers::%{_u}%::locked} to false
+					if {afkplayers::%{_u}%::items::%{_sel}%} > 0:
+						add loop-value to {awaiting::*}
+						set {afkplayers::%{_u}%::awaiting} to 5
+						send "{@prefix} An hour has passed, you have 5 minutes to change selection if you want." to {_p}
+					else:
+						remove loop-value from {afking::*}
+						send "{@prefix} You are out of hours for %{_sel}%." to {_p}
+						delete {afksel::%{_u}%}
+						delete {afkplayers::%{_u}%::status}
+				else:
+					if {afkplayers::%{_u}%::awaiting} <= 0:
+						delete {afkplayers::%{_u}%::awaiting}
+						if {afkplayers::%{_u}%::items::%{_sel}%} > 0:
+							set {afkplayers::%{_u}%::times} to 60
+							remove 1 from {afkplayers::%{_u}%::items::%{_sel}%}
+							set {afkplayers::%{_u}%::locked} to true
+							send "{@prefix} &eStarted Afk again for %{_sel}%" to {_p}
+							set {afkplayers::%{_u}%::status} to "Running, lock, %{afkplayers::%{_u}%::times}%"
+						else:
+						
+							remove loop-value from {afking::*}
+							set {afkplayers::%{_u}%::locked} to false
+							send "{@prefix} You are out of hours for %{_sel}%." to {_p}
+							delete {afksel::%{_u}%}
+							delete {afkplayers::%{_u}%::status}
+					else:
+						remove 1 from {afkplayers::%{_u}%::awaiting}
+
+					
+			else:	
+				give {afkitem::%{_sel}%::permin} of ("%{afkitem::%{_sel}%::block}%" parsed as item) to {_p}
+				remove 1 from {afkplayers::%{_u}%::times}
+				set {afkplayers::%{_u}%::status} to "Running, locked, %{afkplayers::%{_u}%::times}% minutes remaining"
+			
+command /coins [<player>]:
+	trigger:
+		if arg-1 is set:
+			set {_player} to arg-1
+		else:
+			set {_player} to player
+		send "{@coinsprefix} &7Player &e%{_player}% &7has &e%{coins::%{_player}'s uuid%}% Coins." to player
+command /coineco <text> <player> [<number>]:
+	permission: coins.eco
+	trigger:
+		if arg-1 is "give":
+			if arg-3 <= 0:
+				send "&cInvalid amount"
+				stop
+			add arg-3 to {coins::%arg-2's uuid%}
+			send "{@coinsprefix} &7Given &e%arg-3% &7to &e%arg-2%"
+		if arg-1 is "take":
+			if arg-3 <= 0:
+				send "&cInvalid amount"
+				stop
+			remove arg-3 from {coins::%arg-2's uuid%}
+			send "{@coinsprefix} &7Taken &e%arg-3% &7from &e%arg-2%"
+		if arg-1 is "reset":
+			set {coins::%arg-2's uuid%} to 0
+			send "{@coinsprefix} &7Reseted &e%arg-2%"
+on placeholderapi placeholder request for the prefix "coins":
+	if {coins::%player's uuid%} is not set:
+		set {coins::%player's uuid%} to 0
+	set the result to "%{coins::%player's uuid%}%"
+command /paycoins <player> <number>:
+	trigger:
+		#if "%arg-1%" is "%player%":
+			#send "&cYou can pay coins to yourself!"
+			#stop
+		if arg-2 <= 0:
+			send "&cInvalid amount."
+			stop
+		set {_bal} to {coins::%player's uuid%}
+		if arg-2 > {_bal}:
+			send "&cYou dont have enough coins to pay!"
+			stop
+		set {coins::%player's uuid%} to {coins::%player's uuid%} - arg-2
+		set {coins::%arg-1's uuid%} to {coins::%arg-1's uuid%} + arg-2
+		send "{@coinsprefix} &7Sent &e%arg-2% coins &7to %arg-1%." to player
+		send "{@coinsprefix} &7Received &e%arg-2% coins &7from %player%" to arg-1

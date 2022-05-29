@@ -1,0 +1,85 @@
+on load:
+	add "sand" to {fallblocks::*}
+	add "concrete_powder" to {fallblocks::*}
+	add "gravel" to {fallblocks::*}
+	add "tnt" to {fallblocks::*}
+	add "concrete powder" to {fallblocks::*}
+on break:
+	player does not have permission "block.place.perm"
+	set {_loc} to event-location
+	if "%regions at {_loc}%" contains "mine":
+		stop
+	if {clearing} is true:
+		cancel event
+	if {playersblocks::*} does not contain event-location:
+		send "&cYou can only break players blocks!"
+		cancel event
+	remove event-location from {playersblocks::*}
+on place:
+	player does not have permission "block.place.perm"
+	if {clearing} is true:
+		cancel event
+		stop
+	if block is interactable:
+		cancel event
+		send "&cYou cant place that block."
+		stop
+	if "%past event-block%" contains "lava":
+		cancel event
+		stop
+	if "%past event-block%" contains "water":
+		cancel event
+		stop
+	loop {fallblocks::*}:
+		if "%type of event-block%" contains loop-value:
+			send "&cYou cant place that block."
+			cancel event
+			
+	add event-location to {playersblocks::*}
+command /clearmap:
+	permission: OP
+	trigger:
+		set {_a} to size of {playersblocks::*}
+		set {_b} to 0
+		if {_a} <= 0:
+			stop
+		broadcast "&8[&6&lTitan&e&lBox&8] &3Map is being cleared! Building is disabled while clearing is done!"
+		set {clearing} to true
+		send "%round({_a}/2)+1%" to "TitanDev" parsed as player
+		loop round(({_a}/2)+1) times:
+			
+			set {_loc} to {playersblocks::%{_b}%}
+			set block at {_loc} to air
+			add 1 to {_b}
+		wait 3 ticks
+		loop round(({_a}/2)+1) times:
+			set {_loc} to {playersblocks::%{_b}%}
+			set block at {_loc} to air
+			add 1 to {_b}
+		delete {playersblocks::*}
+		set {clearing} to false
+		broadcast "&8[&6&lTitan&e&lBox&8] &3Map is has been cleared!"
+every 5 minutes:
+	
+	set {_a} to size of {playersblocks::*}
+	set {_b} to 0
+	if {_a} <= 0:
+		stop
+	broadcast "&8[&6&lTitan&e&lBox&8] &3Map is being cleared! Building is disabled while clearing is done!"
+	set {clearing} to true
+	send "%round({_a}/2)+1%" to "TitanDev" parsed as player
+	loop round(({_a}/2)+1) times:
+		
+		set {_loc} to {playersblocks::%{_b}%}
+		set block at {_loc} to air
+		add 1 to {_b}
+	wait 3 ticks
+	loop round(({_a}/2)+1) times:
+		set {_loc} to {playersblocks::%{_b}%}
+		set block at {_loc} to air
+		add 1 to {_b}
+	delete {playersblocks::*}
+	set {clearing} to false
+	broadcast "&8[&6&lTitan&e&lBox&8] &3Map is has been cleared!"
+	
+	

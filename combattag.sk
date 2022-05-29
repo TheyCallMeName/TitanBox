@@ -1,0 +1,45 @@
+options:
+	prefix: &8[&c&lCombatTag&8] &7
+on load:
+	set {n} to 1
+	set {v} to -1
+	add "spawn" to {blockedcmds::*}
+	add "warp" to {blockedcmds::*}
+	add "tp" to {blockedcmds::*}
+every 1 minute:
+	set {n} to 1
+	set {v} to -1
+
+on damage:
+	add 1 to {n}
+	set {v} to {v} - 1
+	set {_n} to {n}
+	set {_v} to {v}
+	set {combattag::%attacker%} to {n}
+	set {combattag::%victim%} to {v}
+	if {combattag::%attacker%} is not set:
+		send "&c&lCombat Tag!" to attacker
+		send "{@prefix}You may not go to spawn now! you hit %victim%!" to attacker
+	if {combattag::%victim%} is not set:
+		send "&c&lCombat Tag!" to victim
+		send "{@prefix}You may not go to spawn now! you got hit by %attacker%" to victim
+	wait 5 seconds
+	if  {combattag::%attacker%} is {_n}:
+		delete {combattag::%attacker%}
+		send "{@prefix}&aYou are out of combattag you may go to spawn now!" to attacker
+	if {combattag::%victim%} is {_v}:
+		delete {combattag::%victim%}
+		send "{@prefix}&aYou are out of combattag you may go to spawn now!" to victim
+on command:
+	{combattag::%player%} is set
+	loop {blockedcmds::*}:
+		
+		if command contains loop-value:
+			cancel event
+			send "{@prefix}You may not go to spawn while ur in combat!"
+#on quit:
+	#wait 1 tick
+	#{combattag::%player%} > 0
+	#make console execute command "ban %player% They combat logged 15 minutes"
+	#broadcast "{@prefix}&c&lPlayer %player% has logged while in combat! he got banned for 15 minutes!"
+		
